@@ -1,3 +1,3 @@
 # Sdx.Decompiler
 
-CommandLine IL decompiler
+CommandLine IL decompiler for mono on Mac
