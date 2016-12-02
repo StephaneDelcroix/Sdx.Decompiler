@@ -1,5 +1,5 @@
 ﻿//
-// PathResolver.cs
+// DecompilerResolver.cs
 //
 // Author:
 //       Stephane Delcroix <stdelc@microsoft.com>
@@ -26,15 +26,23 @@
 
 
 using Mono.Cecil;
+using System.IO;
 namespace Sdx.Decompiler
 {
-	public class PathResolver : DefaultAssemblyResolver
+	public class DecompilerResolver : DefaultAssemblyResolver
 	{
-		public void AddAssembly(string p)
+		void AddSearchDirectory(string directory, bool recursive)
 		{
-			RegisterAssembly(AssemblyDefinition.ReadAssembly(p, new ReaderParameters {
-				AssemblyResolver = this
-			}));
+			AddSearchDirectory(directory);
+			if (!recursive)
+				return;
+			foreach (var dir in Directory.GetDirectories(directory))
+				AddSearchDirectory(dir, true);
+			
+		}
+		public DecompilerResolver()
+		{
+			AddSearchDirectory("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/", true);
 		}
 	}
 }

@@ -82,18 +82,10 @@ namespace Sdx.Decompiler
 				Environment.Exit(0);
 			}
 
-			IAssemblyResolver resolver = new DefaultAssemblyResolver();
-
+			var resolver = new DecompilerResolver();
 			var dir = Path.GetDirectoryName(assemblyPath);
-			if (!string.IsNullOrEmpty(dir)) {
-				var assemblies = from file in Directory.GetFiles(dir)
-								 where file != assemblyPath && (Path.GetExtension(file) == ".exe" || Path.GetExtension(file) == ".dll")
-								 select file;
-
-				resolver = new PathResolver();
-				foreach (var asm in assemblies)
-					((PathResolver)resolver).AddAssembly(asm);
-			}
+			if (!string.IsNullOrEmpty(dir))
+				resolver.AddSearchDirectory(dir);
 
 			var directory = Directory.CreateDirectory(outputDir);
 			var assemblyDef = AssemblyDefinition.ReadAssembly(Path.GetFullPath(assemblyPath), new ReaderParameters {
